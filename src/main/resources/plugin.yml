@@ -1,0 +1,8 @@
+name: PaperLowhealthPlugin
+version: '${project.version}'
+main: pt.muc.mc.paperlowhealthplugin.PaperLowhealthPlugin
+api-version: 1.19
+load: STARTUP
+authors: [ AlmeidaA ]
+description: A sample project to test the features of a (Paper) Minecraft plugin
+website: github.com/Almeida-a
