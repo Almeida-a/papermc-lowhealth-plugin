@@ -19,7 +19,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
     private static final Logger logger = LoggerFactory.getLogger(PaperLowhealthPlugin.class);
 
     @EventHandler
-    public void onPlayerSomething(EntityDamageEvent damageEvent) {
+    public void onEntityDamage(EntityDamageEvent damageEvent) {
         UUID entityId = damageEvent.getEntity().getUniqueId();
 
         // Get player
