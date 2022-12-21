@@ -47,10 +47,13 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         // Plugin startup logic
         Bukkit.getPluginManager().registerEvents(this, this);
+        logger.info(" \"Low-Health\" plugin has started!");
+
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+
     }
 }
