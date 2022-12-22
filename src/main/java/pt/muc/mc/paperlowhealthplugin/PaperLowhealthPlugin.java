@@ -20,6 +20,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent damageEvent) {
+
         UUID entityId = damageEvent.getEntity().getUniqueId();
 
         // Get player
@@ -34,6 +35,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
             return;
         }
         double maxHealth = maxHealthAttr.getValue();
+        logger.debug("Player {} has taken damage: {} out of {}", player.getName(), player.getHealth(), maxHealth);
 
         int playerHealthPercentage = (int) (100 * player.getHealth() / maxHealth);
 
