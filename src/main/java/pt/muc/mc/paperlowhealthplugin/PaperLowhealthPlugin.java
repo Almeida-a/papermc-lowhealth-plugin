@@ -40,7 +40,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
 
         int playerHealthPercentage = (int) (100 * player.getHealth() / maxHealth);
 
-        if (playerHealthPercentage < 30) {
+        if (playerHealthPercentage < DEFAULT_PERCENTAGE_THRESHOLD) {
             String message = String.format("Player %s has low health (%d%%)", player.getName(), playerHealthPercentage);
             Bukkit.broadcast(Component.text(message));
         }
