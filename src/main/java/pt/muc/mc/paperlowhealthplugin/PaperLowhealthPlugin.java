@@ -10,8 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
@@ -29,12 +29,12 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
             return;
 
         // Get max-health value
-        AttributeInstance maxHealthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (maxHealthAttr == null) {
+        Optional<AttributeInstance> maxHealthAttr = Optional.ofNullable(player.getAttribute(Attribute.GENERIC_MAX_HEALTH));
+        if (!maxHealthAttr.isPresent()) {
             logger.error("Could not fetch max health attribute!");
             return;
         }
-        double maxHealth = maxHealthAttr.getValue();
+        double maxHealth = maxHealthAttr.get().getValue();
         logger.debug("Player {} has taken damage: {} out of {}", player.getName(), player.getHealth(), maxHealth);
 
         int playerHealthPercentage = (int) (100 * player.getHealth() / maxHealth);
@@ -48,6 +48,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
+
         Bukkit.getPluginManager().registerEvents(this, this);
         logger.info(" \"Low-Health\" plugin has started!");
 
