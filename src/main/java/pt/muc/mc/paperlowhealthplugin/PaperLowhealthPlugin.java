@@ -16,7 +16,8 @@ import java.util.UUID;
 
 public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
 
-    private static final Logger logger = LoggerFactory.getLogger(PaperLowhealthPlugin.class);
+    private static final Logger logger = (Logger) Bukkit.getLogger();
+    private static final int DEFAULT_PERCENTAGE_THRESHOLD = 50;
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent damageEvent) {
