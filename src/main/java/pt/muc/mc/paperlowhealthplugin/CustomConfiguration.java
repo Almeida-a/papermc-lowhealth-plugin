@@ -1,5 +1,6 @@
 package pt.muc.mc.paperlowhealthplugin;
 
+import org.apache.commons.text.CaseUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Arrays;
@@ -23,9 +24,18 @@ public enum CustomConfiguration {
         this.type = type;
     }
 
-    public void loadConfiguration(FileConfiguration configuration) {
+    /**
+     * @return a camelCase formatted name
+     */
+    public String nameToLowerCamelCase() {
+
+        return CaseUtils.toCamelCase(name(), false, '_');
+
+    }
+
+    public static void loadConfiguration(FileConfiguration configuration) {
         Arrays.stream(CustomConfiguration.values()).toList().forEach(attribute -> {
-            String attributeKey = attribute.name().toLowerCase();
+            String attributeKey = attribute.nameToLowerCamelCase();
             attribute.value = configuration.getObject(attributeKey, attribute.getType());
         });
     }
