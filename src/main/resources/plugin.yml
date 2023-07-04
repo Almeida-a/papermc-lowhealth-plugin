@@ -6,3 +6,8 @@ load: STARTUP
 authors: [ AlmeidaA ]
 description: A sample project to test the features of a (Paper) Minecraft plugin
 website: github.com/Almeida-a
+
+commands:
+  lowhealth:
+    description: Base for all lowhealth commands
+    usage: 'Unknown command! Try /<command> help'

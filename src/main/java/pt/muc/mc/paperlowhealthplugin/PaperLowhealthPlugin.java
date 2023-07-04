@@ -1,6 +1,6 @@
 package pt.muc.mc.paperlowhealthplugin;
 
-import net.kyori.adventure.text.Component;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -14,9 +14,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.muc.mc.paperlowhealthplugin.configparameters.ConfigurationParameters;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ import java.util.UUID;
  */
 public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
 
-    private static final Logger logger = LoggerFactory.getLogger(PaperLowhealthPlugin.class);
+    private static final Logger myLogger = LoggerFactory.getLogger(PaperLowhealthPlugin.class);
     private FileConfiguration customConfig;
 
     @EventHandler
@@ -41,29 +43,32 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
         // Get max-health value
         Optional<AttributeInstance> maxHealthAttr = Optional.ofNullable(player.getAttribute(Attribute.GENERIC_MAX_HEALTH));
         if (maxHealthAttr.isEmpty()) {
-            logger.error("Could not fetch max health attribute!");
+            myLogger.error("Could not fetch max health attribute!");
             return;
         }
         double maxHealth = maxHealthAttr.get().getValue();
-        logger.debug("Player {} has taken damage: {} out of {}", player.getName(), player.getHealth(), maxHealth);
+        myLogger.debug("Player {} has taken damage: {} out of {}", player.getName(), player.getHealth(), maxHealth);
 
-        Integer playerHealthPercentage = (int) (100 * player.getHealth() / maxHealth);
+        int playerHealthPercentage = (int) (100 * player.getHealth() / maxHealth);
 
-        Integer configuredThreshold = (Integer) CustomConfiguration.THRESHOLD_PERCENTAGE.getValue();
+        int configuredThreshold = NumberUtils.toInt(ConfigurationParameters.THRESHOLD_PERCENTAGE.getValue());
         if (playerHealthPercentage < configuredThreshold) {
-            String message = String.format("Player %s has low health (%d%%)", player.getName(), playerHealthPercentage);
-            Bukkit.broadcast(Component.text(message));
+            Broadcaster.send("Player %s has low health (%d%%)", player.getName(), playerHealthPercentage);
         }
     }
 
     @Override
     public void onEnable() {
 
+        // Extract configurations from config.yml
         createCustomConfig();
-        CustomConfiguration.loadConfiguration(customConfig);
+        ConfigurationParameters.loadConfiguration(customConfig, myLogger);
+
+        // Register commands
+        Objects.requireNonNull(this.getCommand("lowhealth")).setExecutor(new LowhealthExecutor());
 
         Bukkit.getPluginManager().registerEvents(this, this);
-        logger.info("\"Low-Health\" plugin has started!");
+        myLogger.info("\"Low-Health\" plugin has started!");
 
     }
 
@@ -79,7 +84,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
         File customConfigFile = new File(getDataFolder(), configFileBasename);
         if (!customConfigFile.exists()) {
             if (customConfigFile.getParentFile().mkdirs()) {
-                logger.info("Non-existent config.yml file. Creating new one");
+                myLogger.info("Non-existent config.yml file. Creating new one");
             }
             saveResource(configFileBasename, false);
         }
@@ -90,7 +95,7 @@ public final class PaperLowhealthPlugin extends JavaPlugin implements Listener {
             customConfig.load(customConfigFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-            logger.error("You have found a bug!");
+            myLogger.error("You have found a bug!");
         }
 
     }

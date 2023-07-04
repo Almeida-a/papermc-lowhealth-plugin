@@ -1,3 +1,2 @@
-# Plugin configuration template
-
+# Players with health (%) below this threshold are considered as being low on health
 thresholdPercentage: 60
